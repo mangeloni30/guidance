@@ -1,0 +1,12 @@
+# Ignore build output
+/dist/
+/out/
+
+# Ignore dependencies
+/node_modules/
+
+# Ignore compiled JavaScript files (if applicable)
+*.js
+
+# Ignore package-lock.json
+/package-lock.json
