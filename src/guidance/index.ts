@@ -3,6 +3,7 @@ import * as types from 'types';
 // import * as os from 'os';
 // import * as requests from 'requests';
 import { Program } from "./program";
+import { load } from "./utils";
 // import * as llms from './llms';
 // import * as library from './library';
 // import { load, chain } from './_utils';
