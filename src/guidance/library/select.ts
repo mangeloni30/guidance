@@ -10,7 +10,7 @@
  * @param logprobs - An optional variable name to set with the logprobs for each option. If this is set the log probs of every option is fully evaluated. When this is null (the default) we use a greedy max approach to select the option (similar to how greedy decoding works in a language model). So in some cases the selected option can change when logprobs is set since it will be more like an exhaustive beam search scoring than a greedy max scoring.
  * @param list_append - Whether to append the generated value to a list stored in the variable. If set to true, the variable must be a list, and the generated value will be appended to the list.
  */
-async function select(
+export async function select(
   variable_name: string = "selected",
   options: string[] | null = null,
   logprobs: string | null = null,

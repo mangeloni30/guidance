@@ -3,7 +3,7 @@ interface ParserContext {
   variable_stack: any;
 }
 
-function set(name: string | Record<string, any>, value?: string, hidden?: boolean, _parser_context?: ParserContext): string {
+export function set(name: string | Record<string, any>, value?: string, hidden?: boolean, _parser_context?: ParserContext): string {
   const parser = _parser_context['parser'];
   const variable_stack = _parser_context['variable_stack'];
 

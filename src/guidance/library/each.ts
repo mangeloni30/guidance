@@ -4,7 +4,7 @@
 // import asyncio
 // from .._utils import ContentCapture
 
-async function each(list: Iterable<any>, hidden: boolean = false, parallel: boolean = false, _parser_context: any = null): Promise<void> {
+export async function each(list: Iterable<any>, hidden: boolean = false, parallel: boolean = false, _parser_context: any = null): Promise<void> {
   const block_content = _parser_context['block_content'];
   const parser = _parser_context['parser'];
   const variable_stack = _parser_context['variable_stack'];

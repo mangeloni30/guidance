@@ -1,6 +1,6 @@
 // from .._utils import strip_markers, ContentCapture
 
-async function role(name: string, hidden: boolean = false, _parser_context: any = null): Promise<string> {
+export async function role(name: string, hidden: boolean = false, _parser_context: any = null): Promise<string> {
   /**
    * A chat role block.
    *

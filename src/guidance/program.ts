@@ -1,3 +1,28 @@
+import {
+  add,
+  assistant,
+  await_,
+  block,
+  break_,
+  contains,
+  each,
+  equal,
+  gen,
+  geneach,
+  greater,
+  if_,
+  less,
+  parse,
+  role,
+  select,
+  set,
+  shell,
+  strip,
+  subtract,
+  system,
+  unless,
+  user
+} from "./library";
 export class Program {
   /**
    * A program template that can be compiled and executed to generate a new filled in (executed) program.
@@ -72,6 +97,33 @@ export class Program {
   private display_throttle_limit: number;
   private update_display: any;
   private _ipython: any;
+  private built_ins = {
+    gen,
+    each: each,
+    geneach,
+    select,
+    if: if_,
+    unless,
+    add,
+    subtract,
+    strip,
+    block,
+    set,
+    await: await_,
+    role,
+    user,
+    system,
+    assistant,
+    break: break_,
+    equal,
+    "==": equal,
+    greater,
+    ">": greater,
+    less,
+    "<": less,
+    contains,
+    parse
+  }
 
   constructor (
       text: string,

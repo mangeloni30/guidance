@@ -1,3 +1,3 @@
-function strip(string: string): string {
+export function strip(string: string): string {
   return string.trim();
 }

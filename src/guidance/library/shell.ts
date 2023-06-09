@@ -8,7 +8,7 @@
 
 import { execSync } from 'child_process';
 
-function shell(command: string, safe: boolean = true, _parser_context?: any): string {
+export function shell(command: string, safe: boolean = true, _parser_context?: any): string {
   const partial_output = _parser_context['partial_output'];
   partial_output(`{{execute '${command}'}}`);
 

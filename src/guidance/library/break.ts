@@ -1,3 +1,3 @@
-function break_(): never {
+export function break_(): never {
   throw new Error("StopIteration");
 };

@@ -1,6 +1,6 @@
 // import re
 
-async function if_(value: boolean, invert: boolean = false, _parser_context: any = null): Promise<string> {
+export async function if_(value: boolean, invert: boolean = false, _parser_context: any = null): Promise<string> {
   /**
    * Standard if/else statement.
    *

@@ -1,4 +1,4 @@
-function greater(arg1: any, arg2: any): boolean {
+export function greater(arg1: any, arg2: any): boolean {
   /**
    * Check if arg1 is greater than arg2.
    *

@@ -3,7 +3,7 @@
 // import uuid
 // from .._utils import ContentCapture
 
-async function geneach(
+export async function geneach(
   list_name: string,
   stop: string | string[] | null = null,
   max_iterations: number = 100,

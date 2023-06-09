@@ -1,7 +1,7 @@
 // from .._utils import strip_markers
 // from .._grammar import grammar
 
-async function parse(string: string, name: string | null = null, _parser_context: any = null): Promise<any> {
+export async function parse(string: string, name: string | null = null, _parser_context: any = null): Promise<any> {
   /**
    * Parse a string as a guidance program.
    *

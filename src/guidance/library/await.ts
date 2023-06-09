@@ -1,4 +1,4 @@
-async function await_(name: string, _parser_context: any = null): Promise<any> {
+export async function await_(name: string, _parser_context: any = null): Promise<any> {
   // stop the program completion if we are waiting for a value to be set
   // this will result in a partially completed program that we can then finish
   // later (by calling it again with the variable we need)

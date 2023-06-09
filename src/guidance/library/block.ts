@@ -1,5 +1,5 @@
 // from .._utils import ContentCapture
-async function block(name: string | null = null, hidden: boolean = false, _parser_context: any = null): Promise<any> {
+export async function block(name: string | null = null, hidden: boolean = false, _parser_context: any = null): Promise<any> {
   const parser = _parser_context['parser'];
   const variable_stack = _parser_context['variable_stack'];
 
