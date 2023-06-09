@@ -1,8 +1,8 @@
-import * as types from 'types';
+import * as types from "types";
+import { Program } from "./program";
 // import * as sys from 'sys';
 // import * as os from 'os';
 // import * as requests from 'requests';
-import { Program } from "./program";
 import { load } from "./utils";
 // import * as llms from './llms';
 // import * as library from './library';
@@ -11,11 +11,8 @@ import { load } from "./utils";
 // import nest_asyncio from 'nest_asyncio';
 // import * as asyncio from 'asyncio';
 
-class Guidance extends types.ModuleType {
+class Guidance {
   private program: Program;
-  public __call__(template: string, llm: any = null, cache_seed: number = 0, logprobs: any = null, silent: any = null, async_mode: boolean = false, stream: any = null, caching: any = null, await_missing: boolean = false, ...kwargs: any): any {
-    return 
-  }
   constructor (
     template: string,
     llm: string,
@@ -27,8 +24,17 @@ class Guidance extends types.ModuleType {
     caching: any,
     await_missing: boolean
   ) {
-    super();
     this.program = new Program(template, llm, cache_seed, logprobs, silent, async_mode, stream, caching, await_missing);
+  }
+
+   // Setter function for the program key
+   setProgram(program: Program) {
+    this.program = program;
+  }
+
+  // Getter function for the program key
+  getProgram(): Program {
+    return this.program;
   }
 }
 
@@ -42,16 +48,18 @@ class Guidance extends types.ModuleType {
   from the web.
  * @returns 
  */
-const load = (guidance_file: string): any => {
-  let template: string;
+// const load = (guidance_file: string): any => {
+//   let template: string;
 
-  if (os.existsSync(guidance_file)) {
-    template = fs.readFileSync(guidance_file, "utf-8");
-  } else if (guidance_file.startsWith("http://") || guidance_file.startsWith("https://")) {
-    template = requests.get(guidance_file).text;
-  } else {
-    throw new Error(`Invalid guidance file: ${guidance_file}`);
-  }
+//   if (os.existsSync(guidance_file)) {
+//     template = fs.readFileSync(guidance_file, "utf-8");
+//   } else if (guidance_file.startsWith("http://") || guidance_file.startsWith("https://")) {
+//     template = requests.get(guidance_file).text;
+//   } else {
+//     throw new Error(`Invalid guidance file: ${guidance_file}`);
+//   }
 
-  return (sys.modules as any)[__name__](template);
-}
+//   return (sys.modules as any)[__name__](template);
+// }
+const myTemplate = "Where there is no guidance, a people falls, but in an abundance of counselors there is safety.";
+const guidance = new Guidance(myTemplate, "text-davinci-003", 0, "logprobs", true, true, "stream", "caching", false);
