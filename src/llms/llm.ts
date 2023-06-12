@@ -1,112 +1,180 @@
-import { Cache, DiskCache } from './caches';
+// import { Cache, DiskCache } from './caches';
 
 class LLMMeta {
   static _cache: any;
 }
 
 class LLM {
-  static cache_version = 1;
-  static default_system_prompt = 'You are a helpful assistant.';
-  llm_name: string = 'unknown';
-  chat_mode = false; // by default models are not in role-based chat mode
-  model_name = 'unknown';
-  private _cache: any;
+  // private cache: any;
+  private cacheVersion: number;
+  private default_system_prompt: string;
+  private llmName: string;
+  private chatMode: boolean;
+  private modelName: string;
+  private tokenizer: string;
 
-  constructor() {}
-
-  call(...args: any[], asynchronous = false, kwargs: Record<string, any> = {}) {
-    /** Creates a session and calls the LLM with the given arguments.
-     *
-     * Note that this is a convenience wrapper so you don't have to call session(),
-     * for higher performance across multiple calls, use a session directly.
-     */
-    const session = this.session(asynchronous);
-    const out = session(...args, ...kwargs);
-    return out;
+  constructor() {
+    this.chatMode = false; // by default models are not in role-based chat mode
+    this.modelName = "unknown";
+    this.llmName = "unknown";
+    this.default_system_prompt = "You are a helpful assistant.";
+    this.cacheVersion = 1;
   }
 
-  getItem(key: string) {
-    /** Gets an attribute from the LLM. */
-    return this[key];
+   // cache_version property
+  public getCacheVersion(): number {
+    return this.cacheVersion;
   }
 
-  session(asynchronous = false) {
-    /** Creates a session for the LLM.
-     *
-     * This implementation is meant to be overridden by subclasses.
-     */
+  public setCacheVersion(value: number) {
+    this.cacheVersion = value;
+  }
+
+  // default_system_prompt property
+  public getDefault_system_prompt(): string {
+    return this.default_system_prompt;
+  }
+
+  public setDefault_system_prompt(value: string) {
+    this.default_system_prompt = value;
+  }
+
+  // llm_name property
+  public getLlmName(): string {
+    return this.llmName;
+  }
+
+  public setLlmName(value: string) {
+    this.llmName = value;
+  }
+
+  // chat_mode property
+  public getChatMode(): boolean {
+    return this.chatMode;
+  }
+
+  public setChatMode(value: boolean) {
+    this.chatMode = value;
+  }
+
+  // model_name property
+  public getModelName(): string {
+    return this.modelName;
+  }
+
+  public setModelName(value: string) {
+    this.modelName = value;
+  }
+
+  public getTokenizer(): string {
+    return this.tokenizer;
+  }
+
+  __getitem__(key: string) {
+      return this[key];
+  }
+
+  /**
+   * 
+   * @param asynchronous 
+   * Creates a session for the LLM.
+   * This implementation is meant to be overridden by subclasses.
+   * @returns 
+   */
+  session(asynchronous: boolean = false) {
     if (asynchronous) {
-      return new LLMSession(this);
+        return new LLMSession(this);
     } else {
-      return new SyncSession(new LLMSession(this));
+        return new SyncSession(new LLMSession(this));
     }
   }
 
-  encode(string: string, kwargs: Record<string, any> = {}) {
-    return this._tokenizer.encode(string, ...kwargs);
+  encode(value: string) {
+    this.tokenizer = encodeURIComponent(value); 
   }
 
-  decode(tokens: any[], kwargs: Record<string, any> = {}) {
-    return this._tokenizer.decode(tokens, ...kwargs);
+  decode(tokens: any, kwargs: any = {}) {
+      this.tokenizer = decodeURIComponent(tokens);
   }
 
-  id_to_token(id: any) {
-    return this.decode([id]);
+  public idToToken(id: number) {
+      return this.decode([id]);
   }
 
-  token_to_id(token: string) {
-    return this.encode(token)[0];
+  public tokenToId(token: string) {
+      return this.encode(token)[0];
   }
+};
 
-  get cache() {
-    if (this._cache !== undefined) {
-      return this._cache;
-    } else {
-      return this.constructor.cache;
-    }
-  }
-
-  set cache(value: any) {
-    this._cache = value;
-  }
+interface LLModel {
+  model_name: string;
+  cache_version: number;
+  __class__: {
+      __name__: string;
+  };
 }
 
 class LLMSession {
-  llm: LLM;
-  _call_counts: Record<string, number>;
+  private llm: LLModel;
+  private call_counts: { [key: string]: number };
 
-  constructor(llm: LLM) {
+  constructor(llm: LLModel) {
     this.llm = llm;
-    this._call_counts = {}; // tracks the number of repeated identical calls to the LLM with non-zero temperature
+    this.call_counts = {}; // tracks the number of repeated identical calls to the LLM with non-zero temperature
   }
 
-  enter() {
-    return this;
+  public __enter__() {
+      return this;
   }
 
-  async call(...args: any[]) {
-    return this.llm(...args);
+  public __exit__(exc_type: any, exc_value: any, traceback: any) {
+      // Do nothing
   }
 
-  exit(exc_type: any, exc_value: any, traceback: any) {}
-
-  _gen_key(args_dict: Record<string, any>) {
-    delete args_dict.self; // skip the "self" arg
+  private _gen_key(args_dict: { [key: string]: any }) {
+    delete args_dict["self"]; // skip the "self" arg
     return Object.values(args_dict)
-      .concat([this.llm.model_name, this.llm.constructor.name, this.llm.cache_version])
-      .join('_---_');
+        .concat([this.llm.model_name, this.llm.__class__.__name__, this.llm.cache_version])
+        .join("_---_");
   }
 
-  _cache_params(args_dict: Record<string, any>): Record<string, any> {
-    /**get the parameters for generating the cache key*/
+  private _cache_params(args_dict: { [key: string]: any }): { [key: string]: any } {
     const key = this._gen_key(args_dict);
     // if we have non-zero temperature we include the call count in the cache key
     if (args_dict.temperature > 0) {
-      args_dict.call_count = this._call_counts[key] || 0;
+      args_dict.call_count = this.call_counts[key] || 0;
 
       // increment the call count
-      this._call_counts[key] = args_dict.call_count + 1;
+      this.call_counts[key] = args_dict.call_count + 1;
     }
     args_dict.model_name = this.llm.model_name;
     args_dict.cache_version = this.llm.cache_version;
-    args_dict.class_name = this.ll
+    args_dict.class_name = this.llm.__class__.__name__;
+
+    return args_dict;
+  }
+}
+
+class SyncSession {
+  private _session: any;
+
+  constructor(session: any) {
+    this._session = session;
+  }
+
+  public __enter__() {
+    this._session.__enter__();
+    return this;
+  }
+
+  public __exit__(exc_type: any, exc_value: any, traceback: any) {
+    return this._session.__exit__(exc_type, exc_value, traceback);
+  }
+
+  public __call__(...args: any[]) {
+    return (async () => {
+      const eventLoop = require('events').default;
+      return await eventLoop.runUntilComplete(this._session.__call__(...args));
+    })();
+  }
+}
