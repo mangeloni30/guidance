@@ -4,7 +4,7 @@ class LLMMeta {
   static _cache: any;
 }
 
-class LLM {
+export class LLM {
   // private cache: any;
   private cacheVersion: number;
   private default_system_prompt: string;
@@ -178,3 +178,5 @@ class SyncSession {
     })();
   }
 }
+
+module.exports.LLM = LLM;

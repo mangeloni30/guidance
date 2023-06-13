@@ -2,8 +2,11 @@
   "name": "guidance",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
+  "type": "module",
   "scripts": {
+    "build": "tsc",
+    "start": "npm run build && node ./dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "angelonimartin90@gmail.com",
@@ -14,5 +17,6 @@
   },
   "dependencies": {
     "axios": "^1.4.0"
-  }
+  },
+  "files": ["dist"]
 }
