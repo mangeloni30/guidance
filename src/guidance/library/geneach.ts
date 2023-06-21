@@ -109,9 +109,9 @@ export async function geneach(
       if (!parser.executing) {
         // make any unfinished `this.` references point to the.
       }
+    }
+  }
 }
-
-geneach.is_block = true;
 
 function _escape_group_name(name: string): string {
   return name.replace("@", "_AT_").replace(".", "_DOT_");

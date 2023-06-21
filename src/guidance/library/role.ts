@@ -1,35 +1,39 @@
-// from .._utils import strip_markers, ContentCapture
+import { ContentCapture } from "../utilsReplicate/index";
 
-export async function role(name: string, hidden: boolean = false, _parser_context: any = null): Promise<string> {
-  /**
-   * A chat role block.
-   *
-   * @param name - The name of the role.
-   * @param hidden - Boolean indicating if the role is hidden.
-   */
+export async function role(
+  name: string,
+  hidden: boolean = false,
+  parserContext: any = null
+): Promise<string> {
+  const block_content = parserContext['block_content'];
+  const parser = parserContext['parser'];
+  const variable_stack = parserContext['variable_stack'];
 
-  const block_content = _parser_context['block_content'];
-  const parser = _parser_context['parser'];
-  const variable_stack = _parser_context['variable_stack'];
+  // Capture the content of the block
+  const newContent: string[] = [];
+  const contentCapture = new ContentCapture(variable_stack, hidden);
+  // contentCapture.start();
 
-  // capture the content of the block
-  const new_content = new ContentCapture(variable_stack, hidden);
-  
-  // send the role-start special tokens
-  new_content += parser.program.llm.role_start(name);
+  try {
+    // Send the role-start special tokens
+    newContent.push(parser.program.llm.role_start(name));
 
-  // visit the block content
-  new_content += await parser.visit(
-    block_content[0],
-    variable_stack,
-    { next_node: _parser_context["block_close_node"], prev_node: _parser_context["prev_node"], next_next_node: _parser_context["next_node"] }
-  );
+    // Visit the block content
+    newContent.push(
+      await parser.visit(
+        block_content[0],
+        variable_stack,
+        parserContext['block_close_node'],
+        parserContext['prev_node'],
+        parserContext['next_node']
+      )
+    );
 
-  // send the role-end special tokens
-  new_content += parser.program.llm.role_end(name);
+    // Send the role-end special tokens
+    newContent.push(parser.program.llm.role_end(name));
+  } finally {
+    // contentCapture.stop();
+  }
 
-  return new_content;
+  return newContent.join('');
 }
-
-role.is_block = true;
-

@@ -7,7 +7,7 @@ class LLMMeta {
 export class LLM {
   // private cache: any;
   private cacheVersion: number;
-  private default_system_prompt: string;
+  private defaultSystemPrompt: string;
   private llmName: string;
   private chatMode: boolean;
   private modelName: string;
@@ -17,7 +17,7 @@ export class LLM {
     this.chatMode = false; // by default models are not in role-based chat mode
     this.modelName = "unknown";
     this.llmName = "unknown";
-    this.default_system_prompt = "You are a helpful assistant.";
+    this.defaultSystemPrompt = "You are a helpful assistant.";
     this.cacheVersion = 1;
   }
 
@@ -31,12 +31,12 @@ export class LLM {
   }
 
   // default_system_prompt property
-  public getDefault_system_prompt(): string {
-    return this.default_system_prompt;
+  public getDefaultSystemPrompt(): string {
+    return this.defaultSystemPrompt;
   }
 
-  public setDefault_system_prompt(value: string) {
-    this.default_system_prompt = value;
+  public setDefaultSystemPrompt(value: string) {
+    this.defaultSystemPrompt = value;
   }
 
   // llm_name property
@@ -94,15 +94,15 @@ export class LLM {
   }
 
   decode(tokens: any, kwargs: any = {}) {
-      this.tokenizer = decodeURIComponent(tokens);
+    this.tokenizer = decodeURIComponent(tokens);
   }
 
   public idToToken(id: number) {
-      return this.decode([id]);
+    return this.decode([id]);
   }
 
   public tokenToId(token: string) {
-      return this.encode(token)[0];
+    return this.encode(token)[0];
   }
 };
 
