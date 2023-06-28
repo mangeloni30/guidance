@@ -10,3 +10,10 @@ export function load(guidance_file: string): any {
     throw new Error(`Invalid guidance file: ${guidance_file}`);
   }
 };
+
+export function stripMarkers(s: string | null): string | null {
+  if (s === null) {
+    return null;
+  }
+  return s.replace(/{{!--G.*?--}}/gs, '');
+};

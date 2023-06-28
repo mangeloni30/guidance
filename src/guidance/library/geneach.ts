@@ -61,7 +61,7 @@ export async function geneach(
 
   // convert stop strings to tokens
   let max_stop_tokens: number | undefined;
-  if (stop !== false) {
+  if (stop) {
     if (stop === null) {
       max_stop_tokens = 2;
     } else {

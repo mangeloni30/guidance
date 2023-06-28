@@ -15,7 +15,6 @@ export { parse } from "./parse";
 export { role } from "./role";
 export { select } from "./select";
 export { set } from "./set";
-export { shell } from "./shell";
 export { strip } from "./strip";
 export { subtract } from "./subtract";
 export { system } from "./system";

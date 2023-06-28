@@ -1,12 +1,3 @@
-import * as asyncio from 'async_hooks';
-import * as re from 're';
-import * as uuid from 'uuid';
-import * as logging from 'logging';
-import { AsyncIter } from '../_utils';
-import { grammar } from '../_grammar';
-
-// const log = logging.getLogger(__name__);
-
 /**
  * @method gen
  * Use the LLM to generate a completion
@@ -76,15 +67,15 @@ export async function gen(
   }
 
   if (list_append) {
-    if (name === null) {
+    if (!name) {
       throw new Error("You must provide a variable name when using list_append=True");
     }
   }
 
   // if stop is null then we use the text of the node after the generate command
-  if (stop === null) {
-    let next_text = (next_node !== null) ? next_node.text : '';
-    let prev_text = (prev_node !== null) ? prev_node.text : '';
+  if (!stop) {
+    let next_text = next_node ? next_node.text : "";
+    let prev_text = prev_node ? prev_node.text : "";
 
     if (next_next_node !== null && next_next_node.text.startsWith("{{~")) {
       next_text = next_text.trim();
@@ -104,15 +95,15 @@ export async function gen(
 
     // auto-detect role stop tags
     if (stop === null) {
-      const m = re.match(/^{{~?\/(user|assistant|system|role)~?}}.*/, next_text);
-      if (m !== null) {
+      const m = next_text.match(/^{{~?\/(user|assistant|system|role)~?}}.*/); // re.match(/^{{~?\/(user|assistant|system|role)~?}}.*/, next_text);
+      if (m) {
         stop = parser.program.llm.role_end(m.group(1));
       }
     }
 
     // auto-detect XML tag stop tokens
     if (stop === null) {
-      const m = re.match(/^<([^>\W]+)[^>]+>/, next_text);
+      const m = next_text.match(/^<([^>\W]+)[^>]+>/);  // re.match(/^<([^>\W]+)[^>]+>/, next_text);
       if (m !== null) {
         const end_tag = "</" + m.group(1) + ">";
         if (next_text.startsWith(end_tag)) {

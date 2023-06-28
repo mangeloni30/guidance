@@ -4,32 +4,13 @@ import { Program } from "./program";
 // import * as os from 'os';
 // import * as requests from 'requests';
 import { load } from "./utils";
-
-interface LLMInterface {
-  getCacheVersion(): number;
-  setCacheVersion(value: number): void;
-  getDefault_system_prompt(): string;
-  setDefault_system_prompt(value: string): void;
-  getLlmName(): string;
-  setLlmName(value: string): void;
-  getChatMode(): boolean;
-  setChatMode(value: boolean): void;
-  getModelName(): string;
-  setModelName(value: string): void;
-  getTokenizer(): string;
-  __getitem__(key: string): any;
-  session(asynchronous?: boolean): any;
-  encode(value: string): void;
-  decode(tokens: any, kwargs?: any): void;
-  idToToken(id: number): any;
-  tokenToId(token: string): any;
-}
+import { LLM } from "../llms/llm";
 
 export class Guidance {
   private program: Program;
   constructor (
     template: string,
-    llm: LLMInterface,
+    llm: LLM,
     cache_seed: number,
     logprobs: any,
     silent: any,

@@ -12,14 +12,16 @@ export function set(name: string | Record<string, any>, value?: string, hidden?:
   }
 
   if (typeof name === 'object') {
-    assert(hidden !== false, "hidden cannot be false if setting multiple variables!");
+    if (!hidden) {
+      throw new Error("hidden cannot be false if setting multiple variables!");
+    }
 
     for (const [k, v] of Object.entries(name)) {
       variable_stack[k] = v;
     }
 
     let out = "";
-    for (const [k, v] of Object.entries(name)) {
+    for (let [k, v] of Object.entries(name)) {
       if (typeof v === 'string') {
         if (v.includes('\n')) {
           v = `"""${v}"""`;

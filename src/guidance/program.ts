@@ -16,13 +16,14 @@ import {
   role,
   select,
   set,
-  shell,
   strip,
   subtract,
   system,
   unless,
   user
 } from "./library";
+import { LLM } from "../llms/llm";
+
 export class Program {
   /**
    * A program template that can be compiled and executed to generate a new filled in (executed) program.
@@ -40,7 +41,7 @@ export class Program {
     llm: guidance.llms.LLM (defaults to guidance.llm)
     The language model to use for executing the program
    */
-  private llm: guidance.llms.LLM | null;
+  private llm: LLM;
   /** 
     cache_seed: int (default 0) or None
     The seed to use for the cache. If you want to use the same cache for multiple programs
@@ -127,7 +128,7 @@ export class Program {
 
   constructor (
       text: string,
-      llm: guidance.llms.LLM | null = null,
+      llm: LLM,
       cache_seed: number | null = 0,
       logprobs: number | null = null,
       silent: boolean | null = null,

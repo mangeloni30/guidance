@@ -1,5 +1,5 @@
-import { if_ } from './_if';
+import { if_ } from "./if";
 
 export async function unless(value: any, _parser_context: any = null): Promise<any> {
-  return await if_(value, { invert: true, _parser_context });
+  return await if_(value, true, _parser_context);
 };

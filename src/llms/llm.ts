@@ -81,13 +81,13 @@ export class LLM {
    * This implementation is meant to be overridden by subclasses.
    * @returns 
    */
-  session(asynchronous: boolean = false) {
-    if (asynchronous) {
-        return new LLMSession(this);
-    } else {
-        return new SyncSession(new LLMSession(this));
-    }
-  }
+  // session(asynchronous: boolean = false) { // TODO: check this
+  //   if (asynchronous) {
+  //       return new LLMSession(this);
+  //   } else {
+  //       return new SyncSession(new LLMSession(this));
+  //   }
+  // }
 
   encode(value: string) {
     this.tokenizer = encodeURIComponent(value); 
@@ -178,5 +178,3 @@ class SyncSession {
     })();
   }
 }
-
-module.exports.LLM = LLM;

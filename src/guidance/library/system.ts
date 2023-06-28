@@ -1,5 +1,5 @@
-import { role } from './_role';
+import { role } from "./role";
 
-export async function system(hidden: boolean = false, _parser_context: any = null): Promise<any> {
-  return await role({ name: 'system', hidden, _parser_context });
+export async function system(hidden: boolean = false, _parser_context: any): Promise<any> {
+  return await role("system", hidden, _parser_context);
 };
