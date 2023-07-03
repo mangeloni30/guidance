@@ -173,8 +173,8 @@ class SyncSession {
 
   public __call__(...args: any[]) {
     return (async () => {
-      const eventLoop = require('events').default;
-      return await eventLoop.runUntilComplete(this._session.__call__(...args));
+      // const eventLoop = require('events').default;
+      // return await eventLoop.runUntilComplete(this._session.__call__(...args));
     })();
   }
 }

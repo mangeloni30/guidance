@@ -1,19 +1,18 @@
-import * as nearley from "nearley";
-// import * as myGrammar from './my-grammar'; // Import your grammar file
+export const grammar = `
+start = template
 
-const myGrammar = `r"""
 template = template_chunk*
-template_chunk = comment / slim_comment / escaped_command / unrelated_escape / command / command_block / content
+template_chunk = comment / slim_comment / escaped_command / unrelated_escape / command / command_block / content / unmatched
 
 comment = comment_start comment_content* comment_end
 comment_start = "{{!--"
-comment_content = not_comment_end / ~r"[^-]*"
+comment_content = not_comment_end / [^-]*
 not_comment_end = "-" !"-}}"
 comment_end = "--}}"
 
 slim_comment = slim_comment_start slim_comment_content* slim_comment_end
 slim_comment_start = "{{" "~"? "!"
-slim_comment_content = not_slim_comment_end / ~r"[^}]*"
+slim_comment_content = not_slim_comment_end / [^}]*
 not_slim_comment_end = "}" !"}"
 slim_comment_end = "}}"
 
@@ -22,11 +21,11 @@ command_block = command_block_open template (command_block_sep template)* comman
 command_block_open = command_start "#" block_command_call command_end
 command_block_sep = command_start ("or" / "else") command_end
 command_block_close = command_start "/" command_name command_end
-command_start = "{{" !"!" "~"?
+command_start = "{{" "!" "~"?
 not_command_start = "{" !"{"
 not_command_escape = "\\" !"{{"
 command_end = "~"? "}}"
-command_contents = ~'[^{]*'
+command_contents = [^{]*
 block_command_call = command_name command_args?
 command_content = command_call / variable_ref
 command_call = command_name command_args
@@ -36,23 +35,23 @@ command_arg = named_command_arg / positional_command_arg
 positional_command_arg = command_arg_group / literal / variable_ref
 named_command_arg = variable_name "=" (literal / variable_ref)
 command_arg_group = "(" command_content ")"
-ws = ~r'\s+'
-command_contentasdf = ~"[a-z 0-9]*"i
-command_name = ~r"[a-z][a-z_0-9\.]*"i / "<" / ">" / "==" / "!=" / ">=" / "<="
-variable_ref = not_exact_or not_exact_else ~r"[@a-z][a-z_0-9\.\[\]\"'-]*"i
-not_exact_or = ~r"or[@a-z][a-z_0-9\.\[\]\"'-]"i / !"or"
-not_exact_else = ~r"else[@a-z][a-z_0-9\.\[\]\"'-]"i / !"else"
-variable_name = ~r"[@a-z][a-z_0-9]*"i
-contentw = ~r'.*'
-content = (not_command_start / not_command_escape / ~r"[^{\\]")+
+ws = ~'\\\\s+'
+command_contentasdf = [a-zA-Z0-9 ]*
+command_name = [a-zA-Z][a-zA-Z0-9.]* / "<" / ">" / "==" / "!=" / ">=" / "<="
+variable_ref = not_exact_or not_exact_else [@[a-zA-Z][a-zA-Z0-9.[\\\\]\\\\\\"'-]*
+not_exact_or = [oO][rR][@[a-zA-Z][a-zA-Z0-9.[\\\\]\\\\\\"'-]* / !"[oO][rR]"
+not_exact_else = [eE][lL][sS][eE][@[a-zA-Z][a-zA-Z0-9.[\\\\]\\\\\\"'-]* / !"[eE][lL][sS][eE]"
+variable_name = [@[a-zA-Z][a-zA-Z0-9]*
+contentw = .*
+content = (not_command_start / not_command_escape / [^{\\\\\\\\])+
 unrelated_escape = "\\" !command_start
-escaped_command = "\\" command_start ~r"[^}]*" command_end
+escaped_command = "\\" command_start [^}]* command_end
 
 literal = string_literal / number_literal / boolean_literal / array_literal / object_literal
 
-string_literal = ~r'"[^\"]*"' / ~r"'[^\']*'"
+string_literal = '\\\\"[^\\\\\\\\"]*\\\\"' / '\\\\\\\\'[^\\\\\\\\']*\\\\''
 
-number_literal = ~r"[0-9\.]+"
+number_literal = [0-9.]+
 
 boolean_literal = "True" / "False"
 
@@ -65,23 +64,7 @@ array_start = "["
 array_end = "]"
 array_item = literal
 
-object_literal = empty_object / single_item_object / multi_item_object
-empty_object = object_start ws? object_end
-single_item_object = object_start ws? object_item ws? object_end
-object_sep = ws? "," ws?
-multi_item_object = object_start ws? object_item (object_sep object_item)* ws? object_end
-object_start = "{"
-object_end = "}"
-object_item = string_literal ws? ":" ws? literal
-"""`
+unmatched = .  // Matches any character that doesn't match other rules
+`;
 
-// Create a Parser object with your grammar
-export const parserObject = new nearley.Parser(nearley.Grammar.fromCompiled(myGrammar));
-
-// Provide the input string to the parser
-// const input = 'Hello World';
-// parserObject.feed(input);
-
-// // Get the parsing results
-// const results = parserObject.results;
 
